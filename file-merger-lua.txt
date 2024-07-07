@@ -1,0 +1,27 @@
+local function mergeFiles(baseFileName, outputFileName)
+    local outputFile = fs.open(outputFileName, "wb")
+    local partNumber = 1
+    
+    while true do
+        local inputFileName = baseFileName .. "_part" .. partNumber .. ".bin"
+        if not fs.exists(inputFileName) then
+            break
+        end
+        
+        local inputFile = fs.open(inputFileName, "rb")
+        local chunk = inputFile.readAll()
+        outputFile.write(chunk)
+        inputFile.close()
+        
+        print("Merged part " .. partNumber)
+        partNumber = partNumber + 1
+    end
+    
+    outputFile.close()
+    print("Merged all parts into " .. outputFileName)
+end
+
+-- Usage
+local baseFileName = "example"  -- Replace with your base file name (without _partX.bin)
+local outputFileName = "merged_file.txt"  -- Replace with your desired output file name
+mergeFiles(baseFileName, outputFileName)
